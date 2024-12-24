@@ -1,101 +1,174 @@
-import Image from "next/image";
+"use client";
+
+import { useState, CSSProperties } from "react";
+import { Terminal } from "lucide-react";
+import "./styles.css";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
+  const [displayText, setDisplayText] = useState("[bject Object]undefined");
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      if (searchInput.toLowerCase() === "help") {
+        setDisplayText(
+          '[bject Object]undefined Unknown command.'
+        );
+      } else {
+        setDisplayText("[bject Object]undefined");
+      }
+    }
+  };
+
+  return (
+    <div style={styles.container}>
+      <div className="statusLights">
+        <div style={styles.lightRed}></div>
+        <div style={styles.lightYellow}></div>
+        <div style={styles.lightGreen}></div>
+      </div>
+
+      <div className="alwaysVisibleText">
+        {displayText}
+      </div>
+
+      <div className="searchBar">
+        <input
+          type="text"
+          placeholder="Enter command..."
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          style={styles.searchInput}
+        />
+      </div>
+
+      <video className="video-container" autoPlay muted loop playsInline>
+        <source src="/afbeeldingen/luc.mp4" type="video/mp4" />
+      </video>
+
+      {isMenuOpen && (
+        <div className="fullscreen-menu">
+          <ul className="menu-list">
+            <li className="menu-item">home</li>
+            <li className="menu-item">about</li>
+            <li className="menu-item">projects</li>
+            <li className="menu-item">contact</li>
+            <li className="menu-item">help</li>
+          </ul>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      )}
+
+      <button style={styles.menuButton} onClick={toggleMenu}>
+        <Terminal size={40} color="black" />
+      </button>
     </div>
   );
 }
+
+const styles = {
+  container: {
+    position: "relative",
+    height: "100vh",
+    width: "100vw",
+    backgroundColor: "black",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    overflow: "hidden",
+  },
+  statusLights: {
+    position: "absolute",
+    top: "80px",
+    left: "15rem",
+    display: "flex",
+    gap: "10px",
+    zIndex: 50,
+  },
+  lightRed: {
+    width: "15px",
+    height: "15px",
+    backgroundColor: "#FF5F57",
+    borderRadius: "50%",
+  },
+  lightYellow: {
+    width: "15px",
+    height: "15px",
+    backgroundColor: "#FFBD2E",
+    borderRadius: "50%",
+  },
+  lightGreen: {
+    width: "15px",
+    height: "15px",
+    backgroundColor: "#28C840",
+    borderRadius: "50%",
+  },
+  video: {
+    position: "absolute",
+    top: "40%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "100%",
+    height: "180%",
+    objectFit: "contain",
+  },
+  alwaysVisibleText: {
+    position: "absolute",
+    top: "100px",
+    left: "15rem",
+    color: "#4CAF50",
+    fontSize: "18px",
+    fontFamily: "monospace",
+    zIndex: 21,
+  },
+  searchBar: {
+    position: "absolute",
+    top: "140px",
+    left: "15rem",
+    backgroundColor: "#000",
+    border: "2px solid #4CAF50",
+    padding: "5px 10px",
+    zIndex: 20,
+    width: "60%",
+  },
+  searchInput: {
+    background: "#000",
+    color: "#4CAF50",
+    border: "none",
+    outline: "none",
+    fontSize: "16px",
+    fontFamily: "monospace",
+    width: "100%",
+  },
+  menuButton: {
+    position: "fixed",
+    top: "20px",
+    right: "20px",
+    backgroundColor: "#4CAF50",
+    border: "none",
+    width: "60px",
+    height: "60px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    cursor: "pointer",
+    zIndex: 1000,
+  },
+  menu: {
+    position: "absolute",
+    top: "100px",
+    right: "20px",
+    backgroundColor: "black",
+    border: "2px solid #4CAF50",
+    color: "#4CAF50",
+    padding: "10px 20px",
+    zIndex: 9,
+    width: "300px",
+  },
+};
+
